@@ -25,7 +25,8 @@ export class AppController {
         #include <stdio.h>
         int main() {
             int a, b;
-            scanf("%d %d", &a, &b);
+            scanf("%d", &a);
+            scanf("%d", &b);
             printf("%d", a + b);
             return 0;
         }
@@ -87,13 +88,6 @@ export class AppController {
             }
         }
       `,
-			kt: `
-        fun main() {
-            val a = readLine()!!.toInt()
-            val b = readLine()!!.toInt()
-            println(a + b)
-        }
-      `,
 			go: `
         package main
     
@@ -119,13 +113,14 @@ export class AppController {
 						"result": "Error"
 					});
 					console.log(language, "언어에 런타임 에러 발생");
-				}
+				} else {
+          resarr.push({
+            "lang": language,
+            "result": "Success"
+          });
+          console.log("정답입니다");
+        }
 			}
-			resarr.push({
-				"lang": language,
-				"result": "Success"
-			});
-			console.log("정답입니다");
 		}
 		return resarr;
 		// return this.appService.getHello();
