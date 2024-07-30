@@ -12,7 +12,7 @@ const languageConfigs: { [key: string]: { extension: string, dockerfile: string,
   cpp: { extension: 'cpp', dockerfile: 'Dockerfile.cpp', compileCmd: 'g++ -o solution solution.cpp', runCmd: './solution < input.txt' },
   py: { extension: 'py', dockerfile: 'Dockerfile.py', runCmd: 'python3 solution.py < input.txt' },
   js: { extension: 'js', dockerfile: 'Dockerfile.js', runCmd: 'node solution.js < input.txt' },
-  rs: { extension: 'rs', dockerfile: 'Dockerfile.rs', compileCmd: 'rustc -o solution solution.rs', runCmd: './solution' },
+  rs: { extension: 'rs', dockerfile: 'Dockerfile.rs', compileCmd: 'rustc -o solution solution.rs', runCmd: './solution < input.txt' },
   java: { extension: 'java', dockerfile: 'Dockerfile.java', compileCmd: 'javac Solution.java', runCmd: 'java Solution < input.txt' },
   go: { extension: 'go', dockerfile: 'Dockerfile.go', compileCmd: 'go build -o solution solution.go', runCmd: './solution < input.txt' },
 };
