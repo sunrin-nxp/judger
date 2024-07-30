@@ -11,7 +11,7 @@ export class AppController {
   async getHello() {
     const testCases: TestCase[] = [
       {
-        input: '1\n2\n',
+        input: `1\n2\n`,
         expectedOutput: '3',
       },
       {

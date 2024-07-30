@@ -8,13 +8,13 @@ import * as path from 'path';
 const execAsync = promisify(exec);
 
 const languageConfigs: { [key: string]: { extension: string, dockerfile: string, compileCmd?: string, runCmd: string } } = {
-  c: { extension: 'c', dockerfile: 'Dockerfile.c', compileCmd: 'gcc -o solution solution.c', runCmd: './solution' },
-  cpp: { extension: 'cpp', dockerfile: 'Dockerfile.cpp', compileCmd: 'g++ -o solution solution.cpp', runCmd: './solution' },
+  c: { extension: 'c', dockerfile: 'Dockerfile.c', compileCmd: 'gcc -o solution solution.c', runCmd: './solution < input.txt' },
+  cpp: { extension: 'cpp', dockerfile: 'Dockerfile.cpp', compileCmd: 'g++ -o solution solution.cpp', runCmd: './solution < input.txt' },
   py: { extension: 'py', dockerfile: 'Dockerfile.py', runCmd: 'python3 solution.py' },
   js: { extension: 'js', dockerfile: 'Dockerfile.js', runCmd: 'node solution.js' },
   rs: { extension: 'rs', dockerfile: 'Dockerfile.rs', compileCmd: 'rustc -o solution solution.rs', runCmd: './solution' },
   java: { extension: 'java', dockerfile: 'Dockerfile.java', compileCmd: 'javac Solution.java', runCmd: 'java Solution' },
-  go: { extension: 'go', dockerfile: 'Dockerfile.go', compileCmd: 'go build -o solution solution.go', runCmd: './solution' },
+  go: { extension: 'go', dockerfile: 'Dockerfile.go', compileCmd: 'go build -o solution solution.go', runCmd: './solution < input.txt' },
 };
 
 const runInSandbox = async (code: string, testCase: TestCase, language: string): Promise<ExecutionResult> => {
@@ -31,6 +31,9 @@ const runInSandbox = async (code: string, testCase: TestCase, language: string):
     const dockerfileContent = await fs.readFile(path.join(__dirname, 'docker', config.dockerfile), 'utf8');
     await fs.writeFile(path.join(tmpDir, 'Dockerfile'), dockerfileContent);
 
+    // Write Input File
+    await fs.writeFile(path.join(tmpDir, 'input.txt'), testCase.input);
+
     // Build Docker image
     await execAsync(`sudo docker build -t ${containerName} ${tmpDir}`);
 
@@ -40,7 +43,9 @@ const runInSandbox = async (code: string, testCase: TestCase, language: string):
     }
 
     // Run Docker container with the test case input and timeout
-    const { stdout, stderr } = await execAsync(`echo "${testCase.input.replace(/\n/g, '\\n')}" | sudo docker run --rm --network none --memory="256m" --cpus="1" -v ${tmpDir}:/usr/src/app -w /usr/src/app ${containerName} timeout 1s sh -c "${config.runCmd}"`);
+    // const { stdout, stderr } = await execAsync(`echo "${testCase.input.replace(/\n/g, '\\n')}" | sudo docker run --rm --network none --memory="256m" --cpus="1" -v ${tmpDir}:/usr/src/app -w /usr/src/app ${containerName} timeout 1s sh -c "${config.runCmd}"`);
+    const { stdout, stderr } = await execAsync(`sudo docker run --rm --network none --memory="256m" --cpus="1" -v ${tmpDir}:/usr/src/app -w /usr/src/app ${containerName} timeout 1s sh -c "${config.runCmd}"`);
+
 
     // Compare the output with the expected output
     const output = stdout.trim();
