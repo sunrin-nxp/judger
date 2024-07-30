@@ -25,5 +25,5 @@ languages=("c" "cpp" "py" "js" "rs" "java" "go")
 for language in "${languages[@]}"; do
   build_image $language
 done
-
+export RUST_BACKTRACE=1
 echo "All Docker images built successfully"
