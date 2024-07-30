@@ -13,7 +13,7 @@ const languageConfigs: { [key: string]: { extension: string, dockerfile: string,
   py: { extension: 'py', dockerfile: 'Dockerfile.py', runCmd: 'python3 solution.py < input.txt' },
   js: { extension: 'js', dockerfile: 'Dockerfile.js', runCmd: 'node solution.js < input.txt' },
   rs: { extension: 'rs', dockerfile: 'Dockerfile.rs', compileCmd: 'rustc -o solution solution.rs', runCmd: './solution' },
-  java: { extension: 'java', dockerfile: 'Dockerfile.java', compileCmd: 'javac Solution.java', runCmd: 'java Solution' },
+  java: { extension: 'java', dockerfile: 'Dockerfile.java', compileCmd: 'javac Solution.java', runCmd: 'java Solution < input.txt' },
   go: { extension: 'go', dockerfile: 'Dockerfile.go', compileCmd: 'go build -o solution solution.go', runCmd: './solution < input.txt' },
 };
 
@@ -21,7 +21,7 @@ const runInSandbox = async (code: string, testCase: TestCase, language: string):
   const config = languageConfigs[language];
   const containerName = `judge-${Date.now()}`;
   const tmpDir = path.join('/tmp', containerName);
-  const codeFile = `solution.${config.extension}`;
+  let codeFile; if (config.extension !== 'java') { codeFile = `solution.${config.extension}` } else { codeFile = 'Solution.java' }
 
   try {
     await fs.mkdir(tmpDir, { recursive: true });
