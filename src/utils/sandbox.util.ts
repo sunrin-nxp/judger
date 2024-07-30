@@ -10,8 +10,8 @@ const execAsync = promisify(exec);
 const languageConfigs: { [key: string]: { extension: string, dockerfile: string, compileCmd?: string, runCmd: string } } = {
   c: { extension: 'c', dockerfile: 'Dockerfile.c', compileCmd: 'gcc -o solution solution.c', runCmd: './solution < input.txt' },
   cpp: { extension: 'cpp', dockerfile: 'Dockerfile.cpp', compileCmd: 'g++ -o solution solution.cpp', runCmd: './solution < input.txt' },
-  py: { extension: 'py', dockerfile: 'Dockerfile.py', runCmd: 'python3 solution.py' },
-  js: { extension: 'js', dockerfile: 'Dockerfile.js', runCmd: 'node solution.js' },
+  py: { extension: 'py', dockerfile: 'Dockerfile.py', runCmd: 'python3 solution.py < input.txt' },
+  js: { extension: 'js', dockerfile: 'Dockerfile.js', runCmd: 'node solution.js < input.txt' },
   rs: { extension: 'rs', dockerfile: 'Dockerfile.rs', compileCmd: 'rustc -o solution solution.rs', runCmd: './solution' },
   java: { extension: 'java', dockerfile: 'Dockerfile.java', compileCmd: 'javac Solution.java', runCmd: 'java Solution' },
   go: { extension: 'go', dockerfile: 'Dockerfile.go', compileCmd: 'go build -o solution solution.go', runCmd: './solution < input.txt' },
