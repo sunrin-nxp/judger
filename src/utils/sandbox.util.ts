@@ -35,16 +35,15 @@ const runInSandbox = async (code: string, testCase: TestCase, language: string):
     await fs.writeFile(path.join(tmpDir, 'input.txt'), testCase.input);
 
     // Build Docker image
-    await execAsync(`sudo docker build -t ${containerName} ${tmpDir}`);
+    await execAsync(`docker build -t ${containerName} ${tmpDir}`);
 
     // Compile the code if necessary
     if (config.compileCmd) {
-      await execAsync(`sudo docker run --rm -v ${tmpDir}:/usr/src/app -w /usr/src/app ${containerName} sh -c "${config.compileCmd}"`);
+      await execAsync(`docker run --rm -v ${tmpDir}:/usr/src/app -w /usr/src/app ${containerName} sh -c "${config.compileCmd}"`);
     }
 
     // Run Docker container with the test case input and timeout
-    // const { stdout, stderr } = await execAsync(`echo "${testCase.input.replace(/\n/g, '\\n')}" | sudo docker run --rm --network none --memory="256m" --cpus="1" -v ${tmpDir}:/usr/src/app -w /usr/src/app ${containerName} timeout 1s sh -c "${config.runCmd}"`);
-    const { stdout, stderr } = await execAsync(`sudo docker run --rm --network none --memory="256m" --cpus="1" -v ${tmpDir}:/usr/src/app -w /usr/src/app ${containerName} timeout 1s sh -c "${config.runCmd}"`);
+    const { stdout, stderr } = await execAsync(`docker run --rm --network none --memory="256m" --cpus="1" -v ${tmpDir}:/usr/src/app -w /usr/src/app ${containerName} timeout 1s sh -c "${config.runCmd}"`);
 
     // Compare the output with the expected output
     const output = stdout.trim();
@@ -54,7 +53,7 @@ const runInSandbox = async (code: string, testCase: TestCase, language: string):
     return { success: false, output: '', error: error.message };
   } finally {
     // Cleanup
-    await execAsync(`sudo docker rmi -f ${containerName}`);
+    await execAsync(`docker rmi -f ${containerName}`);
     await fs.rm(tmpDir, { recursive: true, force: true });
   }
 };
