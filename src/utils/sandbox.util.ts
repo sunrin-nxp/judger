@@ -1,10 +1,10 @@
-import { TestCase } from '../interface/in.interface';
-import { ExecutionResult } from '../interface/out.interface';
 import { dockerfiles } from './dockerfiles.util';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import Testcases from 'src/interface/testcase.interface';
+import ExecutionResult from 'src/interface/ExecutionResult.interface';
 
 const execAsync = promisify(exec);
 
@@ -18,7 +18,7 @@ const languageConfigs: { [key: string]: { extension: string, dockerfile: string,
   go: { extension: 'go', dockerfile: dockerfiles.go, compileCmd: 'go build -o solution solution.go', runCmd: './solution < input.txt' },
 };
 
-const runInSandbox = async (code: string, testCase: TestCase, language: string): Promise<ExecutionResult> => {
+const runInSandbox = async (code: String, testCase: Testcases, language: string): Promise<ExecutionResult> => {
   const config = languageConfigs[language];
   const containerName = `judge-${Date.now()}`;
   const tmpDir = path.join('/tmp', containerName);
@@ -47,7 +47,7 @@ const runInSandbox = async (code: string, testCase: TestCase, language: string):
 
     // Compare the output with the expected output
     const output = stdout.trim();
-    const success = output === testCase.expectedOutput.trim();
+    const success = output === testCase.output.trim();
     return { success, output, error: stderr.trim() };
   } catch (error) {
     return { success: false, output: '', error: error.message };
