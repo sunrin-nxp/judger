@@ -9,6 +9,15 @@ const env = process.env;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('judge');
-  await app.listen(3000);
+  linkToDatabase();
+  if (env.MODE == "DEV") {
+    try {
+      setupSwagger(app);
+      console.log("Swagger is enabled");
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  await app.listen(env.PORT);
 }
 bootstrap();
