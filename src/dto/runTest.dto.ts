@@ -8,6 +8,12 @@ export class runTestDto {
     problemNumber!: Number;
 
     @ApiProperty({
+        description: "채점을 요청한 유저의 ID입니다.",
+        example: "juan.lee"
+    })
+    userid!: String;
+
+    @ApiProperty({
         description: "제출한 코드의 언어입니다.",
         example: "py"
     })
