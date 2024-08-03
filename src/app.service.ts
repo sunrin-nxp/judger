@@ -7,15 +7,16 @@ import Testcases from './interface/testcase.interface';
 
 @Injectable()
 export class AppService {
-  async runTest(problemData: doTest, language: String) {
+  async runTest(problemData: doTest) {
     const problem = await problemsSchema.findOne({ problemNumber: problemData.problemNumber });
     let testcases: Testcases[] = problem.testcases; let successFlag: Boolean = true; // Successs 0, Failue 1
     for (const testcase of testcases) {
-      const result = await runInSandbox(problemData.usercode, testcase, `${language}`);
+      const result = await runInSandbox(problemData.usercode, testcase, `${problemData.language}`);
       successFlag = true ? result.success : false;
     }
+    let res: String; if(successFlag)res="정답입니다";else res="틀렸습니다";
     return {
-      result: '정답입니다' ? successFlag == true : '틀렸습니다'
+      result: res
     };
   }
 }
