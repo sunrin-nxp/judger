@@ -11,7 +11,6 @@ const logger = new Logger("Main")
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('judge');
   app.useLogger(winstonLogger);
   await linkToDatabase().then(() => { logger.log("Connected to MongoDB") }).catch((e) => logger.error(e));
   if (env.MODE == "DEV") {
