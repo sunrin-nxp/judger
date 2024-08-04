@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import Problems from './interface/problems.interface';
 import { runInSandbox } from './utils/sandbox.util';
 import doTest from './interface/doTest.interface';
 import problemsSchema from './models/problems.schema';
