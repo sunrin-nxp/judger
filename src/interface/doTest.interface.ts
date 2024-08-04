@@ -1,6 +1,5 @@
 interface doTest {
     problemNumber: Number;
-    userid: String;
     language: String;
     usercode: String;
 }

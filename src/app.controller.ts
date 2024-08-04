@@ -1,16 +1,14 @@
-import { Controller, Post, Param, Body, HttpCode, Logger } from '@nestjs/common';
+import { Controller, Post, Param, Body, HttpCode } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiProperty, ApiParam } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { runInSandbox } from './utils/sandbox.util';
 import Problems from './interface/problems.interface';
 import { runTestDto } from './dto/runTest.dto';
 import doTest from './interface/doTest.interface';
-import moment from 'moment-timezone';
 
 @ApiTags("Judger API")
 @Controller()
 export class AppController {
-  private readonly logger = new Logger("App Controller");
   constructor(private readonly appService: AppService) { }
 
   @ApiOperation({
@@ -33,7 +31,6 @@ export class AppController {
   @HttpCode(200)
   @Post()
   async runTest(@Body() bd: runTestDto) {
-    this.logger.log(`Judge Request From ${bd.userid} at ${Date.now().toLocaleString()} on Problem ${bd.problemNumber}`)
     return this.appService.runTest(bd);
   }
 }
