@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import Problems from './interface/problems.interface';
 import { runInSandbox } from './utils/sandbox.util';
 import doTest from './interface/doTest.interface';
@@ -7,6 +7,8 @@ import Testcases from './interface/testcase.interface';
 
 @Injectable()
 export class AppService {
+  private readonly logger = new Logger("App Service");
+
   async runTest(problemData: doTest) {
     const problem = await problemsSchema.findOne({ problemNumber: problemData.problemNumber });
     let testcases: Testcases[] = problem.testcases; let successFlag: Boolean = true; // Successs 0, Failue 1
